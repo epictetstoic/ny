@@ -1,0 +1,66 @@
+---
+
+- name: Copy K3s service file
+  register: k3s_service
+  template:
+    src: "k3s.service.j2"
+    dest: "/etc/systemd/system/k3s.service"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy K3s environment variables file
+  register: k3s_service
+  template:
+    src: "k3s.service.j2"
+    dest: "{{ k3s__env_file_path }}"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy k3s bin to localhost (in case if no internet on remote host)
+  get_url:
+    url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s__version }}/k3s"
+    dest: /tmp/k3s
+  delegate_to: localhost
+  tags: k3s__copy
+
+- name: Copy k3s to remote host
+  copy:
+    src: /tmp/k3s
+    dest: /usr/local/bin/k3s
+    mode: a+x
+  tags: k3s__copy
+
+- name: Enable and check K3s service
+  systemd:
+    name: k3s
+    daemon_reload: true
+    state: "{{ k3s__service_state }}"
+    enabled: true
+
+- name: Wait for node-token
+  wait_for:
+    path: /var/lib/rancher/k3s/server/node-token
+
+- name: Ensure {{ k3s__kube_config_path }} dir exists
+  file:
+    path: "{{ k3s__kube_config_path }}"
+    state: directory
+  delegate_to: localhost
+
+- name: Copy config file to user home directory
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: "{{ k3s__kube_config_path }}/config"
+    remote_src: yes
+    owner: "{{ ansible_user }}"
+  delegate_to: localhost
+
+- name: Replace to hostname
+  replace:
+    path: "{{ k3s__kube_config_path }}/config"
+    regexp: 'https://localhost:6443'
+    replace: 'https://{{ k3s__master_ip }}:6443'
+  delegate_to: localhost
+  tags: k3s__config_file
