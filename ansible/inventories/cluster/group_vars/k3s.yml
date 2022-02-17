@@ -1,5 +1,0 @@
-k3s__service_state: restarted
-k3s__env_file_path: /etc/systemd/system/k3s.service.env
-k3s__version: v1.23.3%2Bk3s1
-k3s__kube_config_path: /home/epictet/.kube
-k3s__master_ip: "84.252.142.166"

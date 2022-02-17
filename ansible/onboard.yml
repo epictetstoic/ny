@@ -1,0 +1,7 @@
+---
+
+- name: Onboard a new vm
+  hosts:
+    - all
+  roles:
+    - onboard

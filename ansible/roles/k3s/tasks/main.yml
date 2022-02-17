@@ -9,15 +9,6 @@
     group: root
     mode: 0755
 
-- name: Copy K3s environment variables file
-  register: k3s_service
-  template:
-    src: "k3s.service.j2"
-    dest: "{{ k3s__env_file_path }}"
-    owner: root
-    group: root
-    mode: 0755
-
 - name: Copy k3s bin to localhost (in case if no internet on remote host)
   get_url:
     url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s__version }}/k3s"
@@ -50,17 +41,16 @@
   delegate_to: localhost
 
 - name: Copy config file to user home directory
-  copy:
-    src: /etc/rancher/k3s/k3s.yaml
+  fetch:
+    src: "/etc/rancher/k3s/k3s.yaml"
     dest: "{{ k3s__kube_config_path }}/config"
-    remote_src: yes
-    owner: "{{ ansible_user }}"
-  delegate_to: localhost
+    flat: true
+  tags: k3s__config_file
 
 - name: Replace to hostname
   replace:
     path: "{{ k3s__kube_config_path }}/config"
-    regexp: 'https://localhost:6443'
+    regexp: 'https://127.0.0.1:6443'
     replace: 'https://{{ k3s__master_ip }}:6443'
   delegate_to: localhost
   tags: k3s__config_file
