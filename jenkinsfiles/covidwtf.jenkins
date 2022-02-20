@@ -3,7 +3,9 @@
 properties([disableConcurrentBuilds()])
 
 pipeline {
-    agent any
+    agent {
+        label 'vm'
+    }
     triggers { 
         pollSCM('H * * * *')
     }

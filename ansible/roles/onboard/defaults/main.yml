@@ -1,2 +1,5 @@
 required__packages:
   - vim
+  - docker
+  - docker.io
+  - openjdk-11-jre-headless
