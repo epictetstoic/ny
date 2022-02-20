@@ -4,6 +4,9 @@ properties([disableConcurrentBuilds()])
 
 pipeline {
     agent any
+    triggers { 
+        pollSCM('H * * * *')
+    }
     options {
         timestamps()
     }
