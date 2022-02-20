@@ -3,3 +3,4 @@ required__packages:
   - docker
   - docker.io
   - openjdk-11-jre-headless
+  - python3

@@ -1,11 +1,14 @@
 #!groovy
-// Check ub1 properties
+
 properties([disableConcurrentBuilds()])
 
 pipeline {
     agent {
         label 'vm'
     }
+	environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+	}    
     triggers { 
         pollSCM('* * * * *')
     }
@@ -15,18 +18,22 @@ pipeline {
     stages {
         stage ("Test") {
             steps {
-                sh 'pip install pytest'
                 sh 'pytest'
             }
         }
-        stage("First step") {
+
+        stage('Build') {
+
             steps {
-                sh 'ssh jenkins@vm-2 \'hostname\''
+                sh 'docker build -t epictetstoic/covidwtf:latest .'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker push bharathirajatut/nodeapp:latest'
             }
         }
-        stage("Second step") {
+
+        stage('Deploy') {
             steps {
-                sh 'ssh jenkins@vm-2 \'uptime\''
+                sh 'docker run -d -p 9114:9114 epictetstoic/covidwtf:latest --name covidwtf'
             }
         }
     }
