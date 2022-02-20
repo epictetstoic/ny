@@ -8,6 +8,12 @@ pipeline {
         timestamps()
     }
     stages {
+        stage ("Test") {
+            steps {
+                sh 'pip install pytest'
+                sh 'pytest'
+            }
+        }
         stage("First step") {
             steps {
                 sh 'ssh jenkins@vm-2 \'hostname\''
