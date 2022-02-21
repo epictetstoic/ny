@@ -1,0 +1,7 @@
+required__packages:
+  - vim
+  - docker
+  - docker.io
+  - openjdk-11-jre-headless
+  - python3
+  - python3-pip

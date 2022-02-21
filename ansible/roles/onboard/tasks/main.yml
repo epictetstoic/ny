@@ -5,3 +5,7 @@
     name: "{{ item }}"
     state: present
   loop: "{{ required__packages }}"
+
+- name: Install pip requirements:
+  pip:
+    name: pytest
