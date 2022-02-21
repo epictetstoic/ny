@@ -54,10 +54,13 @@ kubectl apply -f deployment.yml --namespace jenkins
 
 ### Create script
 cd python
-** 20-minutes adventure**
-.....rock'n'roll!!!!!.....f*ck, why doen't it work???.......f*ck, why does it work???.......ok, one more minute..one more...
+
+<b>20-minutes adventure</b>
+<i>.....rock'n'roll!!!!!.....f*ck, why doen't it work???.......
+f*ck, why does it work???.......ok, one more minute..one more...</i>
 24 hours later
 ...ok, looks good...
+
 > [Epictet automation 5. Python script to get Covid cases from WHO official website.](https://youtu.be/7JS46XSSznI)
 > [Epictet automation 6. Use python to expose Covid cases from WHO website as prometheus metrics](https://youtu.be/Lp0i4HJpjLk)
 > [Epictet automation 7. Pytest, just pytest](https://youtu.be/pejHw8EHPmY)
